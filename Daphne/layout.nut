@@ -1,54 +1,61 @@
 //
 // Daphne - Dragons's Lair
 // Theme by Mahuti
-// 1.0
+// 2.0 pos module added.
 //
 
+local order = 0
 class UserConfig {
-	</ label="Enable Logos", help="If wheel images/logos aren't used, game titles will be shown instead.", order=1, options="show logos, show titles" />
+	</ label="Enable Logos", help="If wheel images/logos aren't used, game titles will be shown instead.", order=order++, options="show logos, show titles" />
 	enable_logos="show logos";
- 
+  	</ label="Show Played Time", help="The amount of time this game's been played.", order=order++, options="Yes, No" />
+	show_playtime="Yes";
 }
 
-local config = fe.get_config();
+local config = fe.get_config()
 
-local flw = fe.layout.width;
-local flh = fe.layout.height;
+fe.load_module("preserve-art")
+fe.load_module("pos") // positioning & scaling module
+
+// stretched positioning
+local posData =  {
+    base_width = 1440.0,
+    base_height = 1080.0,
+    layout_width = fe.layout.width,
+    layout_height = fe.layout.height,
+    scale= "stretch",
+    debug = false,
+}
+local pos = Pos(posData)
 
 //Background
-local bg = fe.add_image("dl_background.png", 0, 0, flw, flh);
+local bg = fe.add_image("dl_background.png", 0, 0, pos.width(1440), pos.height(1080))
 
 // Snap
-local snap = fe.add_artwork("snap", flw*0.1187, flh*0.110, flw*0.4289, flh*0.4925);
+local snap = fe.add_artwork("snap", pos.x(208), pos.y(129), pos.width(513), pos.height(513))
 snap.trigger = Transition.EndNavigation;
 
-
 if ( config["enable_logos"] == "show logos" )
-{
- 	// wheel
-	local wheel = fe.add_artwork("wheel", flw*0.1187, flh*0.694, flw*0.4289, flh*0.20);
-	wheel.preserve_aspect_ratio = true;
-	wheel.trigger = Transition.EndNavigation;
+{    
+	local wheel = PreserveArt("wheel", pos.x(208), pos.y(749), pos.width(513), pos.height(216))
+    wheel.set_fit_or_fill("fit")
+    wheel.trigger = Transition.EndNavigation;
 	wheel.zorder=100;
+    wheel.set_anchor(::Anchor.Centre)
 	
-} /* else {
-	// Title
-	local title = fe.add_text("[Title]", flw*0, flh*0.92, flw*1, flh*0.1);
-	title.align = Align.Right;
-	title.charsize = 24;
-	title.set_rgb(247, 35, 0);
-} */ 
- 
-
-// Playtime
-local playtime = fe.add_text("Playtime : [PlayedTime]", flw*0.01, flh*0.93, flw*0.4, flh*0.1);
-playtime.align = Align.Left;
-playtime.charsize = 20;
-playtime.set_rgb(255, 255, 255);
+}
 
 // Dirk the Daring
-local borders = fe.add_image("dl_foreground.png", flw*0, flh*0, flw*1, flh*1);
-borders.preserve_aspect_ratio = false;
+local borders = fe.add_image("dl_foreground.png", 0, 0, pos.width(1440), pos.height(1080))
 
+if ( config["show_playtime"] == "Yes" )
+{
+// Playtime            
+local playtime = fe.add_text("Playtime : [PlayedTime]", pos.x(15), pos.y(1080), pos.width(576), pos.height(22))
+    playtime.y = pos.y(10,"bottom",playtime)
+    playtime.x = pos.y(10,"left",playtime)
+    pos.set_font_height(20,playtime, "BottomLeft")
+    playtime.set_rgb(255, 255, 255)	
+}
 
 
