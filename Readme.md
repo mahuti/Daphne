@@ -6,15 +6,14 @@ This is a very simple daphne theme based off of the assets from a Hyperspin them
 
 ![Image of Daphne Theme Sample](https://raw.githubusercontent.com/mahuti/Daphne/master/daphne.png)
 
-### Requires: 
-- Snap: use video snaps from emumovies
-- Wheel: wheel logos from hyper spin
+### Requires
+- Pos module https://github.com/mahuti/Pos-Module
+
+### Uses: 
+- snap: use video snaps  
+- Wheel: wheel logos  
 
 ### Features: 
-- Themes is 4:3 ratio
+- Theme can be scaled to any size, but looks best at 4:3
 - Videosnaps play inside crystal ball  
-
-
-#### To-Do
-- [ ] Modify Theme to work in other than 4:3 Mode
 
